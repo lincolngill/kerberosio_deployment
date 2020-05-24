@@ -1,0 +1,13 @@
+---
+#
+# Playbook setup kerberos.io Pi security camera
+#
+- name: Pi security camera setup
+  hosts: picameras
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    # picamera role depends on pi role
+    - import_role:
+        name: picamera

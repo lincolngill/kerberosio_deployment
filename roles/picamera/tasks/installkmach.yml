@@ -1,0 +1,46 @@
+---
+# Install Kerberos.io machinery
+
+- name: Install Kerberos.io machinery dependent packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ffmpeg
+
+- name: Get pi model
+  script:
+    cmd: files/pimodel.py
+  register: pi_model
+  changed_when: false
+
+- name: Set pi type fact
+  set_fact:
+    pi_type: "{{ pi_model.stdout | trim }}"
+
+- debug:
+    msg:
+      - "Pi type - {{ pi_type }}"
+      - "Machinery pkg - {{ picamera_mach_baseurl }}/{{ picamera_mach_pkg[pi_type] }}"
+
+- name: Download machinery pkg {{ picamera_mach_baseurl }}/{{ picamera_mach_pkg[pi_type] }}
+  get_url:
+    url: "{{ picamera_mach_baseurl }}/{{ picamera_mach_pkg[pi_type] }}"
+    dest: "{{ ansible_env.HOME }}/{{ picamera_mach_pkg[pi_type] }}"
+    force: no
+
+- name: Install machinery pkg {{ picamera_mach_pkg[pi_type] }}
+  apt:
+    deb: "{{ ansible_env.HOME }}/{{ picamera_mach_pkg[pi_type] }}"
+  notify: Restart kerberosio
+
+- debug: 
+    msg: "Lib Pkg - {{ picamera_mach_baseurl }}/{{ item }}"
+  loop: "{{  picamera_mach_libs[pi_type] }}"
+
+- name: Download machinery libs
+  get_url:
+    url: "{{ picamera_mach_baseurl }}/{{ item }}"
+    dest: "{{ picamera_mach_libdir }}/{{ item  }}"
+  loop: "{{ picamera_mach_libs[pi_type] }}"
+  notify: Restart kerberosio

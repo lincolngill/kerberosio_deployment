@@ -1,0 +1,33 @@
+---
+# Required:
+
+# Defaults:
+picamera_kerberosio_version: 2.8.0
+# Kerberos.io machinery downloads for each Raspberry pi type
+picamera_mach_baseurl: "https://github.com/kerberos-io/machinery/releases/download/v{{ picamera_kerberosio_version }}"
+picamera_mach_pkg: 
+  '0': "rpi1-machinery-kerberosio-armhf-{{ picamera_kerberosio_version }}.deb"
+  '1': "rpi1-machinery-kerberosio-armhf-{{ picamera_kerberosio_version }}.deb"
+  '2': "rpi2-machinery-kerberosio-armhf-{{ picamera_kerberosio_version }}.deb"
+  '3': "rpi3-machinery-kerberosio-armhf-{{ picamera_kerberosio_version }}.deb"
+  '4': "rpi4-machinery-kerberosio-armhf-{{ picamera_kerberosio_version }}.deb"
+picamera_mach_libdir: "/usr/lib/arm-linux-gnueabihf"
+picamera_mach_libs: 
+  '0':
+    - "rpi1-libx264.so.148"
+    - "rpi1-libx265.so.160"
+  '1':
+    - "rpi1-libx264.so.148"
+    - "rpi1-libx265.so.160"
+  '2': 
+    - "rpi2-libx264.so.148"
+    - "rpi2-libx265.so.160"
+  '3':
+    - "rpi3-libx264.so.148"
+    - "rpi3-libx265.so.160"
+  '4':
+    - "rpi4-libx264.so.148"
+    - "rpi4-libx265.so.160"
+
+# Kerberos.io web downloads
+picamera_web_baseurl: "https://github.com/kerberos-io/web/releases/download/v{{ picamera_kerberosio_version }}"

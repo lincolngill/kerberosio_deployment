@@ -1,0 +1,66 @@
+---
+# Install Kerberos.io web
+
+- name: Remove default nginx site file
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart nginx
+
+- name: Create kerberosio.conf
+  copy:
+    src: files/kerberosio.conf
+    dest: /etc/nginx/sites-enabled/kerberosio.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart nginx
+
+- name: Create /var/www/web
+  file:
+    path: /var/www/web
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Download kerberos.io web archive
+  get_url:
+    url: "{{ picamera_web_baseurl }}/web.tar.gz"
+    dest: "/var/www/web/web.tar.gz"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Unpack kerberios.io web archive
+  unarchive:
+    src: /var/www/web/web.tar.gz
+    dest: /var/www/web
+    owner: www-data
+    group: www-data
+    remote_src: yes
+    creates: /var/www/web/app
+
+- name: Recursive set file owner to www-data
+  file:
+    path: "/var/www/web/{{ item }}"
+    owner: www-data
+    recurse: yes
+  loop:
+    - storage
+    - bootstrap/cache
+
+- name: Recursive set file mode to 755
+  file:
+    path: "/var/www/web/{{ item }}"
+    mode: '0775'
+    recurse: yes
+  loop:
+    - storage
+    - bootstrap/cache
+
+- name: Set /var/www/web/config/kerberos.php mode 0600, owner www-data
+  file:
+    path: /var/www/web/config/kerberos.php
+    owner: www-data
+    mode: '0600'

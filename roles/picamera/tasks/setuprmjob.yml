@@ -1,0 +1,17 @@
+---
+# Create cron job to remove images when disk gets full
+
+- name: Create kerberosio_autoremoval.sh
+  copy:
+    src: files/kerberosio_autoremoval.sh
+    dest: /home/pi/kerberosio_autoremoval.sh
+    owner: pi
+    group: pi
+    mode: '0755'
+
+- name: Schedule auto removal in cron
+  cron:
+    name: "kerberos.io image removal"
+    minute: "*/5"
+    user: pi
+    job: "/bin/bash /home/pi/kerberosio_autoremoval.sh"

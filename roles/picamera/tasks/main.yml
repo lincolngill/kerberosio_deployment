@@ -1,0 +1,20 @@
+---
+# Setup pi as kerberios.io camera
+# Refer README.md
+#
+
+- import_tasks: configcamera.yml
+  tags: configcamera
+
+- import_tasks: installkmach.yml
+  tags: installkmach
+
+# Separate tagged task file because it takes a long time to check them all 
+- import_tasks: installkwebpkgs.yml
+  tags: installkwebpkgs
+
+- import_tasks: installkweb.yml
+  tags: installkweb
+
+- import_tasks: setuprmjob.yml
+  tags: setuprmjob
